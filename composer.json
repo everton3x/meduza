@@ -1,0 +1,13 @@
+{
+    "name": "everton3x/meduza",
+    "description": "Yet another sitatic site generator write in PHP.",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Everton da Rosa",
+            "email": "everton3x@gmail.com"
+        }
+    ],
+    "require": {}
+}
