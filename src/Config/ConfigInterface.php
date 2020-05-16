@@ -3,10 +3,9 @@
 namespace Meduza\Config;
 
 /**
- * The meduza configuration
- *
+ * Interface for configuration objects
  * @author everton
  */
-class Config {
+interface ConfigInterface {
     //put your code here
 }

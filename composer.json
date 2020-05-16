@@ -15,7 +15,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Meduza\\": "src"
+            "Meduza\\": "src",
+            "Meduza\\Test\\": "tests"
         }
     },
     "require-dev": {
