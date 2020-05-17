@@ -25,15 +25,4 @@ class BuilderTest extends TestCase
         $this->assertInstanceOf(Vector::class, $this->invokeMethod($builder, 'loadContentDir', [$config->getAllconfig()['content_dir']]));
     }
 
-    /**
-     * 
-     * @dataProvider configProvider
-     */
-    public function testRunPluginsSuccess($config)
-    {
-        $builder = new Builder($config);
-
-        $this->invokeMethod($builder, 'runPlugins', []);
-//        $this->expectException(\Exception::class);
-    }
 }

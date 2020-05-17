@@ -24,12 +24,15 @@ class TagsPlugin implements PluginInterface
         while($this->pageIterator->valid()){
             $page = $this->pageIterator->current();
             $frontMatter = &$page->getFrontmatter();//return by reference ATENTION
-            print_r($frontMatter);
+//            print_r($frontMatter);
             if(!key_exists('tags', $frontMatter)) {
                 $frontMatter['tags'] = ['No tags'];
             }
             $this->pageIterator->next();
         }
+        
+        //@TODO Implementar o restante do plugin
+        
         return $this->pageIterator;
     }
 }

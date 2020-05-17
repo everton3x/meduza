@@ -46,7 +46,7 @@ class Builder
 
         $this->runPlugins();
         
-//        print_r($this->pages);
+        print_r($this->pages);
 
         $this->parseContent();
 
