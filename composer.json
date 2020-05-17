@@ -11,7 +11,9 @@
     ],
     "require": {
         "php": ">=7.3.0",
-        "ext-yaml": "*"
+        "ext-yaml": "*",
+        "ext-ds": "*",
+        "php-ds/php-ds": "^1.2"
     },
     "autoload": {
         "psr-4": {
