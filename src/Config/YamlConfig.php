@@ -22,6 +22,7 @@ class YamlConfig extends ConfigAbstract {
     protected function loadConfig($configFile): void {
         try{
             $this->config = yaml_parse_file($configFile);
+            $this->loadExtraConfig();
         } catch (CriticalException $ex) {
             throw $ex;
         }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Meduza\Config;
 
 /**
@@ -7,14 +6,29 @@ namespace Meduza\Config;
  *
  * @author everton
  */
-abstract class ConfigAbstract implements ConfigInterface {
-    
-    
+abstract class ConfigAbstract implements ConfigInterface
+{
+
     protected $config = [];
-    
+
     abstract protected function loadConfig($configFile): void;
-    
-    public function getAllConfig(): array {
+
+    protected function loadExtraConfig(): void
+    {
+        $config = $this->getAllConfig();
+
+        if (key_exists('extra-config', $config)) {
+            $loader = new ConfigLoader();
+            
+            foreach ($config['extra-config'] as $extraConfigFile) {
+                $extraConfig = $loader->loadConfig($extraConfigFile);
+                $this->config = array_merge($this->config, $extraConfig->getAllConfig());
+            }
+        }
+    }
+
+    public function getAllConfig(): array
+    {
         return $this->config;
     }
 }

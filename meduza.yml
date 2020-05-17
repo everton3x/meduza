@@ -6,9 +6,15 @@ title: "Meduza sample site" # site title
 # Content configuration
 content_dir: "content" # directory for parsable content
 static_dir: "static" # directory for static (non parsable) content
+default_template: "post"
 
 # Build configuration
 content_parser: "CommonMarkParser" # the parser class name
 
 # Plugins
 plugins: ["Tags", "Categories", "Paginator", "Sitemap"]
+
+# Extra configuration files
+extra-config: [
+    "./extra-config/theme.yml"
+]
