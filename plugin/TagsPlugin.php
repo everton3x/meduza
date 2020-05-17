@@ -17,13 +17,14 @@ class TagsPlugin implements PluginInterface
         $this->pageIterator = $pages;
     }
 
-    public function run()
+    public function run(): BuildDataIterator
     {
         $this->pageIterator->rewind();
         
         while($this->pageIterator->valid()){
             $page = $this->pageIterator->current();
-            $frontMatter = $page->getFrontmatter();
+            $frontMatter = &$page->getFrontmatter();//return by reference ATENTION
+            print_r($frontMatter);
             if(!key_exists('tags', $frontMatter)) {
                 $frontMatter['tags'] = ['No tags'];
             }

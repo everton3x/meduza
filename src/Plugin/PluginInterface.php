@@ -12,5 +12,5 @@ interface PluginInterface
 {
     public function __construct(BuildDataIterator $pages);
     
-    public function run();
+    public function run(): BuildDataIterator;
 }

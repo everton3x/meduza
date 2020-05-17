@@ -46,7 +46,7 @@ class Builder
 
         $this->runPlugins();
         
-        print_r($this->pages);
+//        print_r($this->pages);
 
         $this->parseContent();
 
@@ -99,11 +99,10 @@ class Builder
         $plugins = $this->config->getAllConfig()['plugins'];
 
         foreach ($plugins as $plugName) {
-            
             $plugClass = "\\Meduza\\Plugin\\{$plugName}Plugin";
             $this->logger->debug("Run plugin $plugClass");
             $plug = new $plugClass($this->pages);
-            $this->pages = &$plug->run();
+            $this->pages = $plug->run();
         }
     }
 
