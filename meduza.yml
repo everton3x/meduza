@@ -12,7 +12,8 @@ default_template: "post"
 content_parser: "CommonMarkParser" # the parser class name
 
 # Plugins
-plugins: ["Tags", "Categories", "Paginator", "Sitemap"]
+#plugin_dir: "plugin"
+plugins: ["Tags"]
 
 # Extra configuration files
 extra-config: [

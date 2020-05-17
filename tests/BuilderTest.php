@@ -3,9 +3,7 @@ namespace Meduza\Test;
 
 use Ds\Vector;
 use Meduza\Build\Builder;
-use Meduza\Config\ConfigLoader;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 
 /**
  * Test for Builder
@@ -14,17 +12,8 @@ use ReflectionClass;
  */
 class BuilderTest extends TestCase
 {
-
-    public function configProvider()
-    {
-        $loaderConfig = new ConfigLoader();
-        $config = $loaderConfig->loadConfig('./meduza.yml');
-
-        return [
-            [$config]
-        ];
-    }
-
+    use TestTrait;
+    
     /**
      * @dataProvider configProvider
      */
@@ -36,12 +25,15 @@ class BuilderTest extends TestCase
         $this->assertInstanceOf(Vector::class, $this->invokeMethod($builder, 'loadContentDir', [$config->getAllconfig()['content_dir']]));
     }
 
-    public function invokeMethod(&$object, string $methodName, array $parameters = [])
+    /**
+     * 
+     * @dataProvider configProvider
+     */
+    public function testRunPluginsSuccess($config)
     {
-        $reflection = new ReflectionClass(get_class($object));
-        $method = $reflection->getMethod($methodName);
-        $method->setAccessible(true);
+        $builder = new Builder($config);
 
-        return $method->invokeArgs($object, $parameters);
+        $this->invokeMethod($builder, 'runPlugins', []);
+//        $this->expectException(\Exception::class);
     }
 }

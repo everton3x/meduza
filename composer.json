@@ -13,12 +13,13 @@
         "php": ">=7.3.0",
         "ext-yaml": "*",
         "ext-ds": "*",
-        "php-ds/php-ds": "^1.2"
+        "psr/log": "^1.1"
     },
     "autoload": {
         "psr-4": {
             "Meduza\\": "src",
-            "Meduza\\Test\\": "tests"
+            "Meduza\\Test\\": "tests",
+            "Meduza\\Plugin\\": ["src/Plugin", "plugin"]
         }
     },
     "require-dev": {
