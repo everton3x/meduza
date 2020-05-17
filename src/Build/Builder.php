@@ -84,7 +84,7 @@ class Builder
     protected function parseFrontmatter(string $file): array
     {
         $this->logger->debug("Parse frontmatter for $file");
-        return [];
+        return yaml_parse_file($file, 0);
     }
 
     protected function readContent(string $file): string
