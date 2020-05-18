@@ -10,8 +10,8 @@ default_template: "post"
 
 # Build configuration
 content_parsers: {
-    md: "CommonMarkdown",
-    markdown: "CommonMarkdown"
+    md: "ErusevParsedown",
+    markdown: "ErusevParsedown"
 }
 
 # Plugins

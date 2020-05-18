@@ -20,42 +20,43 @@ class Builder
     public function __construct(ConfigInterface $config)
     {
         $this->config = $config;
-        $this->pageIterator = new BuildDataIterator($config);//need for tests
+        $this->pageIterator = new BuildDataIterator($config); //need for tests
     }
 
     public function build(LoggerInterface $logger)
     {
         $this->logger = $logger;
-        
+
         $logger->debug('Build start...');
-        
+
         $this->pageIterator = new BuildDataIterator($this->config);
 
         $contentDir = $this->loadContentDir($this->config->getAllConfig()['content_dir']);
-        
+
         foreach ($contentDir as $contentFile) {
             $logger->debug("Processs $contentFile");
             $pageData = new PageData(
                 $contentFile,
                 $this->parseFrontmatter($contentFile),
-                $this->readContent($contentFile)
+                $this->readContent($contentFile),
+                $this->config
             );
-            
+
             $this->pageIterator->addPageData($pageData);
         }
 
         $this->runPlugins();
-        
-        print_r($this->pageIterator);
 
         $this->parseContent();
+
+        print_r($this->pageIterator);
 
         $this->mergeTemplate();
 
         $this->saveOutput();
 
         $this->copyStatic();
-        
+
         $logger->debug("End of build process!");
     }
 
@@ -90,7 +91,25 @@ class Builder
     protected function readContent(string $file): string
     {
         $this->logger->debug("Read content from $file");
-        return '';
+        
+        $content = '';
+        
+        $fhandle = fopen($file, 'r');
+        $controler = 0;
+        while (($line = fgets($fhandle)) !== false) {
+            if($controler >= 2){
+                $content .= $line;
+            }
+            
+            if(trim($line) === '---'){
+                $controler++;
+            }
+            
+        }
+        
+        fclose($fhandle);
+        
+        return $content;
     }
 
     protected function runPlugins()
@@ -110,6 +129,25 @@ class Builder
     {
         $this->logger->debug("Parsing content");
         //faz um loop nas páginas e pega PageData::$content, trasnforma com a classe config.content_parser e salva em PageData::$htmlContent
+
+        $parsersConfigList = $this->config->getAllConfig()['content_parsers'];
+//        print_r($parsersConfigList);
+
+        $this->pageIterator->rewind();
+        while ($this->pageIterator->valid()) {
+            $page = & $this->pageIterator->current();
+
+            $extension = $page->getFileExtension();
+
+            if (!key_exists($extension, $parsersConfigList)) {
+                throw new ErrorException("Content parser for file extension [$extension] not supported.");
+            }
+            $parserClassName = "\\Meduza\Parser\\{$parsersConfigList[$extension]}";
+            $parser = new $parserClassName();
+            $page->setHtmlContent($parser->parse($page->getContent()));
+
+            $this->pageIterator->next();
+        }
     }
 
     protected function mergeTemplate()

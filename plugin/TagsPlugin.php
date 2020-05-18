@@ -59,7 +59,7 @@ class TagsPlugin implements PluginInterface
         
         $content = '';
         
-        $page = new PageData($file, $frontMatter, $content);
+        $page = new PageData($file, $frontMatter, $content, $pageIterator->getConfig());
         
         $pageIterator->addPageData($page);
         

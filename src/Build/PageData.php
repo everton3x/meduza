@@ -1,6 +1,8 @@
 <?php
 namespace Meduza\Build;
 
+use Meduza\Config\ConfigInterface;
+
 /**
  * The page data for individual content file
  *
@@ -8,6 +10,8 @@ namespace Meduza\Build;
  */
 class PageData
 {
+    protected $config = null;
+    
     protected $file = '';
     
     protected $frontmatter = [];
@@ -18,8 +22,9 @@ class PageData
     
     protected $output = '';
 
-    public function __construct(string $file, array $frontmatter, string $content)
+    public function __construct(string $file, array $frontmatter, string $content, ConfigInterface $config)
     {
+        $this->config = $config;
         $this->file = $file;
         $this->frontmatter = $frontmatter;
         $this->content = $content;
@@ -70,11 +75,17 @@ class PageData
         if(key_exists('slug', $this->frontmatter)){
             $slug = $this->frontmatter['slug'];
         }else{
-            $fileExtension = pathinfo($this->file, PATHINFO_EXTENSION);
+            $pathSplitted = explode('.', $this->file);
+            array_pop($pathSplitted);//pop last element (extension);
             
-            $slug = basename($this->file, $fileExtension);
+            $slug = str_replace($this->config->getAllConfig()['content_dir'], '', $pathSplitted)[0];
         }
         
         return $slug;
+    }
+    
+    public function getFileExtension(): string
+    {
+        return pathinfo($this->file, PATHINFO_EXTENSION);
     }
 }
