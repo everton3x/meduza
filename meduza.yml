@@ -9,7 +9,10 @@ static_dir: "static" # directory for static (non parsable) content
 default_template: "post"
 
 # Build configuration
-content_parser: "CommonMarkParser" # the parser class name
+content_parsers: {
+    md: "CommonMarkdown",
+    markdown: "CommonMarkdown"
+}
 
 # Plugins
 #plugin_dir: "plugin"

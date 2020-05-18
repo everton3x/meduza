@@ -25,14 +25,24 @@ class PageData
         $this->content = $content;
     }
     
-    public function &getFrontmatter(): array
+    public function getFrontmatter(): array
     {
         return $this->frontmatter;
     }
     
-    public function &getContent(): string
+    public function setFrontmatter(array $frontMatter)
+    {
+        $this->frontmatter = $frontMatter;
+    }
+    
+    public function getContent(): string
     {
         return $this->content;
+    }
+    
+    public function setContent(string $content)
+    {
+        $this->content = $content;
     }
     
     public function setHtmlContent(string $html)
@@ -53,5 +63,18 @@ class PageData
     public function getOutput(): string
     {
         return $this->output;
+    }
+    
+    public function getSlug(): string
+    {
+        if(key_exists('slug', $this->frontmatter)){
+            $slug = $this->frontmatter['slug'];
+        }else{
+            $fileExtension = pathinfo($this->file, PATHINFO_EXTENSION);
+            
+            $slug = basename($this->file, $fileExtension);
+        }
+        
+        return $slug;
     }
 }

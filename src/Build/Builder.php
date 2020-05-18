@@ -14,13 +14,13 @@ class Builder
 {
 
     protected $config = null;
-    protected $pages = null;
+    protected $pageIterator = null;
     protected $logger = null;
 
     public function __construct(ConfigInterface $config)
     {
         $this->config = $config;
-        $this->pages = new BuildDataIterator($config);//need for tests
+        $this->pageIterator = new BuildDataIterator($config);//need for tests
     }
 
     public function build(LoggerInterface $logger)
@@ -29,7 +29,7 @@ class Builder
         
         $logger->debug('Build start...');
         
-        $this->pages = new BuildDataIterator($this->config);
+        $this->pageIterator = new BuildDataIterator($this->config);
 
         $contentDir = $this->loadContentDir($this->config->getAllConfig()['content_dir']);
         
@@ -41,12 +41,12 @@ class Builder
                 $this->readContent($contentFile)
             );
             
-            $this->pages->addPageData($pageData);
+            $this->pageIterator->addPageData($pageData);
         }
 
         $this->runPlugins();
         
-        print_r($this->pages);
+        print_r($this->pageIterator);
 
         $this->parseContent();
 
@@ -101,8 +101,8 @@ class Builder
         foreach ($plugins as $plugName) {
             $plugClass = "\\Meduza\\Plugin\\{$plugName}Plugin";
             $this->logger->debug("Run plugin $plugClass");
-            $plug = new $plugClass($this->pages);
-            $this->pages = $plug->run();
+            $plug = new $plugClass($this->pageIterator);
+            $this->pageIterator = $plug->run();
         }
     }
 
