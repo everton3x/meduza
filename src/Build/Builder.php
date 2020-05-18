@@ -49,9 +49,9 @@ class Builder
 
         $this->parseContent();
 
-        print_r($this->pageIterator);
-
         $this->mergeTemplate();
+
+        print_r($this->pageIterator);
 
         $this->saveOutput();
 
@@ -91,24 +91,23 @@ class Builder
     protected function readContent(string $file): string
     {
         $this->logger->debug("Read content from $file");
-        
+
         $content = '';
-        
+
         $fhandle = fopen($file, 'r');
         $controler = 0;
         while (($line = fgets($fhandle)) !== false) {
-            if($controler >= 2){
+            if ($controler >= 2) {
                 $content .= $line;
             }
-            
-            if(trim($line) === '---'){
+
+            if (trim($line) === '---') {
                 $controler++;
             }
-            
         }
-        
+
         fclose($fhandle);
-        
+
         return $content;
     }
 
@@ -135,7 +134,7 @@ class Builder
 
         $this->pageIterator->rewind();
         while ($this->pageIterator->valid()) {
-            $page = & $this->pageIterator->current();
+            $page = $this->pageIterator->current();
 
             $extension = $page->getFileExtension();
 
@@ -154,6 +153,35 @@ class Builder
     {
         $this->logger->debug("Merging content and templates");
         //loop nas páginas para pegar o frontmatter e o html content e mesclar no template e salvar no PageData::$output
+
+        $theme_path = "{$this->config->getAllConfig()['themes_dir']}/{$this->config->getAllConfig()['theme']}";
+        $twigLoader = new \Twig\Loader\FilesystemLoader($theme_path);
+        $twig = new \Twig\Environment($twigLoader);
+
+
+        $this->pageIterator->rewind();
+        while ($this->pageIterator->valid()) {
+            $page = $this->pageIterator->current();
+            
+            $frontMatter = $page->getFrontmatter();
+            $htmlContent = $page->getHtmlContent();
+            
+            if(key_exists('template', $frontMatter)){
+                $template = $frontMatter['template'];
+            }else{
+                $template = $this->config->getAllConfig()['default_template'];
+            }
+            
+            $output = $twig->render("$template.twig", [
+                'config' => $this->config->getAllConfig(),
+                'page' => [
+                    'content' => $htmlContent
+                ]
+            ]);
+
+            $page->setOutput($output);
+            $this->pageIterator->next();
+        }
     }
 
     protected function saveOutput()

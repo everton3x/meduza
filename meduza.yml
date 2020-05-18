@@ -7,6 +7,7 @@ title: "Meduza sample site" # site title
 content_dir: "content" # directory for parsable content
 static_dir: "static" # directory for static (non parsable) content
 default_template: "post"
+themes_dir: "themes"
 
 # Build configuration
 content_parsers: {

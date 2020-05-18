@@ -62,7 +62,7 @@ class PageData
     
     public function setOutput(string $html)
     {
-        $this->output = $output;
+        $this->output = $html;
     }
     
     public function getOutput(): string
