@@ -12,7 +12,6 @@
     "require": {
         "php": ">=7.3.0",
         "ext-yaml": "*",
-        "ext-ds": "*",
         "psr/log": "^1.1",
         "erusev/parsedown": "^1.7",
         "twig/twig": "^3.0"

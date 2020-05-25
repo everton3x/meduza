@@ -51,8 +51,6 @@ class Builder
 
         $this->mergeTemplate();
 
-        print_r($this->pageIterator);
-
         $this->saveOutput();
 
         $this->copyStatic();
@@ -156,29 +154,32 @@ class Builder
 
         $theme_path = "{$this->config->getAllConfig()['themes_dir']}/{$this->config->getAllConfig()['theme']}";
         $twigLoader = new \Twig\Loader\FilesystemLoader($theme_path);
-        $twig = new \Twig\Environment($twigLoader);
+        $twig = new \Twig\Environment($twigLoader, [
+            'autoescape' => false //needs to no auto escape content
+        ]);
 
 
         $this->pageIterator->rewind();
         while ($this->pageIterator->valid()) {
             $page = $this->pageIterator->current();
-            
+
             $frontMatter = $page->getFrontmatter();
             $htmlContent = $page->getHtmlContent();
-            
-            if(key_exists('template', $frontMatter)){
+
+            if (key_exists('template', $frontMatter)) {
                 $template = $frontMatter['template'];
-            }else{
+            } else {
                 $template = $this->config->getAllConfig()['default_template'];
             }
-            
+
+//            echo $htmlContent, PHP_EOL;
             $output = $twig->render("$template.twig", [
                 'config' => $this->config->getAllConfig(),
                 'page' => [
                     'content' => $htmlContent
                 ]
             ]);
-
+//            echo $output, PHP_EOL;
             $page->setOutput($output);
             $this->pageIterator->next();
         }
@@ -186,13 +187,79 @@ class Builder
 
     protected function saveOutput()
     {
-        $this->logger->debug("SAve output");
-        //salvaos arquivos finais
+        $this->logger->debug("Save output");
+        //salva os arquivos finais
+//        print_r($this->pageIterator);
+        $config = $this->config->getAllConfig();
+
+        if (!key_exists('output_dir', $config)) {
+            throw new CriticalException("Output dir not configured!");
+        }
+
+        $output_dir = $config['output_dir'];
+//        echo $output_dir, PHP_EOL;
+
+        if (is_dir(realpath($output_dir))) {
+            $this->delTree(realpath($output_dir));
+        }
+
+        $this->pageIterator->rewind();
+        while ($this->pageIterator->valid()) {
+            $page = $this->pageIterator->current();
+
+            $frontMatter = $page->getFrontmatter();
+            $html = $page->getOutput();
+            $slug = $page->getSlug();
+//            echo $page->getFilePath(), ' -> ',$slug, PHP_EOL;
+//            print_r($frontMatter);
+
+
+            $file_sub_path = str_replace($config['url_base'], $output_dir, $slug);
+
+            if (!is_dir($file_sub_path)) {
+                mkdir($file_sub_path, 0777, true);
+            }
+
+            $file_output = $file_sub_path . "index.html";
+//            echo $slug, ' -> ',$file_output, PHP_EOL;
+//            echo $html, PHP_EOL;
+            file_put_contents($file_output, $html);
+
+            $this->pageIterator->next();
+        }
     }
 
     protected function copyStatic()
     {
         $this->logger->debug("Copy static content");
         //copia o conteúdo estático
+        
+        $this->recursiveCopy(realpath($this->config->getAllConfig()['static_dir']), realpath($this->config->getAllConfig()['output_dir']));
+    }
+
+    protected function delTree(string $dir)
+    {
+        $files = array_diff(scandir($dir), array('.', '..'));
+        foreach ($files as $file) {
+            (is_dir("$dir/$file")) ? $this->delTree("$dir/$file") : unlink("$dir/$file");
+        }
+        return rmdir($dir);
+    }
+
+    protected function recursiveCopy($src, $dst)
+    {
+        $dir = opendir($src);
+        @mkdir($dst, 0777, true);
+        while (false !== ( $file = readdir($dir))) {
+            if (( $file != '.' ) && ( $file != '..' )) {
+                if (is_dir($src . '/' . $file)) {
+                    $this->recursiveCopy($src . '/' . $file, $dst . '/' . $file);
+                } else {
+                    copy($src . '/' . $file, $dst . '/' . $file);
+                }
+            }
+        }
+        closedir($dir);
     }
 }
+    

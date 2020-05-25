@@ -72,20 +72,36 @@ class PageData
     
     public function getSlug(): string
     {
+        if(key_exists('url_base', $this->config->getAllConfig())) {
+            $url_base = $this->config->getAllConfig()['url_base'];
+        } else {
+            $url_base = '';
+        }
+        
         if(key_exists('slug', $this->frontmatter)){
             $slug = $this->frontmatter['slug'];
         }else{
             $pathSplitted = explode('.', $this->file);
             array_pop($pathSplitted);//pop last element (extension);
             
+            
             $slug = str_replace($this->config->getAllConfig()['content_dir'], '', $pathSplitted)[0];
         }
         
-        return $slug;
+        if(substr($slug, -1, 1) !== '/'){
+            $slug .= '/';
+        }
+        
+        return "$url_base$slug";
     }
     
     public function getFileExtension(): string
     {
         return pathinfo($this->file, PATHINFO_EXTENSION);
+    }
+    
+    public function getFilePath(): string
+    {
+        return $this->file;
     }
 }

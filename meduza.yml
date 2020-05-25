@@ -2,6 +2,7 @@
 ---
 # Site configuration
 title: "Meduza sample site" # site title
+url_base: "http://localhost:8000/meduza" # url base for site
 
 # Content configuration
 content_dir: "content" # directory for parsable content
@@ -14,6 +15,8 @@ content_parsers: {
     md: "ErusevParsedown",
     markdown: "ErusevParsedown"
 }
+
+output_dir: "dist" # destination dir to files
 
 # Plugins
 #plugin_dir: "plugin"

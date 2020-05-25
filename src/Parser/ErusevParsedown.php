@@ -22,7 +22,7 @@ class ErusevParsedown implements ParserInterface
     public function parse(string $content): string
     {
         try {
-            return $this->parser->text($content);
+            return $this->parser->parse($content);
         } catch (Exception $ex) {
             throw $ex;
         }

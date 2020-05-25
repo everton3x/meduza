@@ -6,4 +6,4 @@ composer.phar
 # composer.lock
 /nbproject/private/
 
-/build/
+/dist/
