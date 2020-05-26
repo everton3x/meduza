@@ -2,19 +2,39 @@
 
 {% block content %}
     <!-- Introduction -->
-	<div class="intro">
-		<div class="container">
-			<div class="units-row">
-			    <div class="unit-10">
-			    	<img class="img-intro" src="img/avatar.png" alt="">
-			    </div>
-			    <div class="unit-90">
-			    	<p class="p-intro">Hello, I’m Saturn. I’m proud to be a part of milky way.</p>
-			    </div>
-			</div>
-		</div>
-	</div>
-    
-    {{ page.content }}
-{% endblock %}
+    {% if page.config.image is defined %}
+        <div class="intro" style="background-image: url('{{config.site.urlBase}}/{{ page.config.image}}');">
+        {% else %}
+            <div class="intro">
+            {% endif %}
+            <div class="container">
+                <div class="units-row">
+                    <div class="unit-10">
+                        <img class="img-intro" src="{{ config.site.urlBase }}/{{ config.avatar }}" alt="">
+                    </div>
+                    <div class="unit-90">
+                        <p class="p-intro">{{ page.config.title }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="container">
+                <!-- Post -->
+                <div class="post">
+                    {% if page.config.description is defined %}
+                        <!-- Heading -->
+                        <a href="#"><h1>{{ page.config.description }}</h1></a>
+                        <hr>
+                    {% endif %}
+                    <div class="in-content">
+                        {{ page.content }}
+                    </div>
+                </div><!-- /post -->
+
+            </div>
+        </div>
+    {% endblock %}
 

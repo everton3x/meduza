@@ -181,7 +181,8 @@ class Builder
             $output = $twig->render("$template.twig", [
                 'config' => $this->config->getAllConfig(),
                 'page' => [
-                    'content' => $htmlContent
+                    'content' => $htmlContent,
+                    'config' => $frontMatter
                 ]
             ]);
 //            echo $output, PHP_EOL;

@@ -6,6 +6,7 @@ site:
     description: "Site de exemplo com Meduza."
     urlBase: "http://localhost:8000" # url base for site
     author: "Everton da Rosa"
+    name: "Meduza"
 
 # Content configuration
 content:
@@ -30,3 +31,15 @@ plugins: ["Tags"]
 extra-config: [
     "./extra-config/theme/saturn.yml"
 ]
+
+social:
+    github: "https://github.com/everton3x/"
+    envelope: "mailto:everton3x@gmail.com"
+    facebook: "https://facebook.com/everton3x/"
+    linkedin: "https://www.linkedin.com/in/everton-da-rosa/"
+    
+navbar:
+    About: "pages/about.html"
+    "See on Github": "https://github.com/everton3x/meduza"
+    
+disqus: "contabilidadepublica"
