@@ -55,6 +55,8 @@ class Builder
 
         $this->copyStatic();
 
+        $this->copyThemeStatic();
+
         $logger->debug("End of build process!");
     }
 
@@ -233,8 +235,19 @@ class Builder
     {
         $this->logger->debug("Copy static content");
         //copia o conteúdo estático
-        
+
         $this->recursiveCopy(realpath($this->config->getAllConfig()['static_dir']), realpath($this->config->getAllConfig()['output_dir']));
+    }
+
+    protected function copyThemeStatic()
+    {
+        $this->logger->debug("Copy theme static content");
+        //copia o conteúdo estático do tema
+        $config = $this->config->getAllConfig();
+        $theme_static_dir = realpath("{$config['themes_dir']}/{$config['theme']}/static/");
+        $output_dir = realpath($this->config->getAllConfig()['output_dir']);
+
+        $this->recursiveCopy("$theme_static_dir", $output_dir);
     }
 
     protected function delTree(string $dir)
@@ -262,4 +275,3 @@ class Builder
         closedir($dir);
     }
 }
-    

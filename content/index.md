@@ -1,0 +1,5 @@
+---
+title: "Hello world Meduza"
+template: home
+slug: /
+---
