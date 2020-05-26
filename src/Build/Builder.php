@@ -69,14 +69,26 @@ class Builder
     protected function loadContentDir(string $contentPath): array
     {
         $content = [];
-        $dirContent = new DirectoryIterator($contentPath);
-
-        $this->logger->debug("Load content dir $contentPath");
-        foreach ($dirContent as $currentContent) {
-            if ($currentContent->isFile()) {
-                $content[] = $currentContent->getPathname();
-                $this->logger->debug("Load content from {$currentContent->getPathname()}");
+//        $dirContent = new DirectoryIterator($contentPath);
+//
+//        $this->logger->debug("Load content dir $contentPath");
+//        foreach ($dirContent as $currentContent) {
+//            if ($currentContent->isFile()) {
+//                $content[] = $currentContent->getPathname();
+//                $this->logger->debug("Load content from {$currentContent->getPathname()}");
+//            }
+//        }
+        
+        $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($contentPath));
+        $it->rewind();
+        while ($it->valid()){
+            if($it->isFile()){
+                $content[] = $it->getPathname();
+                $this->logger->debug("Load content from {$it->getPathname()}");
             }
+            
+            
+            $it->next();
         }
 
         return $content;
