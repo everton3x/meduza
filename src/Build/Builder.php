@@ -199,6 +199,49 @@ class Builder
         }
     }
 
+//    protected function saveOutput()
+//    {
+//        $this->logger->debug("Save output");
+//        //salva os arquivos finais
+////        print_r($this->pageIterator);
+//        $config = $this->config->getAllConfig();
+//
+//        if (!key_exists('output_dir', $config)) {
+//            throw new CriticalException("Output dir not configured!");
+//        }
+//
+//        $output_dir = $config['output_dir'];
+////        echo $output_dir, PHP_EOL;
+//
+//        if (is_dir(realpath($output_dir))) {
+//            $this->delTree(realpath($output_dir));
+//        }
+//
+//        $this->pageIterator->rewind();
+//        while ($this->pageIterator->valid()) {
+//            $page = $this->pageIterator->current();
+//
+//            $frontMatter = $page->getFrontmatter();
+//            $html = $page->getOutput();
+//            $slug = $page->getSlug();
+////            echo $page->getFilePath(), ' -> ',$slug, PHP_EOL;
+////            print_r($frontMatter);
+//
+//
+//            $file_sub_path = str_replace($config['url_base'], $output_dir, $slug);
+//
+//            if (!is_dir($file_sub_path)) {
+//                mkdir($file_sub_path, 0777, true);
+//            }
+//
+//            $file_output = $file_sub_path . "index.html";
+////            echo $slug, ' -> ',$file_output, PHP_EOL;
+////            echo $html, PHP_EOL;
+//            file_put_contents($file_output, $html);
+//
+//            $this->pageIterator->next();
+//        }
+//    }
     protected function saveOutput()
     {
         $this->logger->debug("Save output");
@@ -228,13 +271,15 @@ class Builder
 //            print_r($frontMatter);
 
 
-            $file_sub_path = str_replace($config['url_base'], $output_dir, $slug);
+            $ext = pathinfo($slug, PATHINFO_EXTENSION);
+            $filename = basename($slug, ".$ext").'.html';
+            $file_sub_path = dirname(str_replace($config['url_base'], $output_dir, $slug));
 
             if (!is_dir($file_sub_path)) {
                 mkdir($file_sub_path, 0777, true);
             }
 
-            $file_output = $file_sub_path . "index.html";
+            $file_output = $file_sub_path . "/". $filename;
 //            echo $slug, ' -> ',$file_output, PHP_EOL;
 //            echo $html, PHP_EOL;
             file_put_contents($file_output, $html);
