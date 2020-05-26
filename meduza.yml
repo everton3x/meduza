@@ -1,22 +1,26 @@
 ## Meduza config file.
 ---
 # Site configuration
-title: "Meduza sample site" # site title
-url_base: "http://localhost:8000" # url base for site
+site:
+    title: "Meduza Static Site Generator" # site title
+    description: "Site de exemplo com Meduza."
+    urlBase: "http://localhost:8000" # url base for site
+    author: "Everton da Rosa"
 
 # Content configuration
-content_dir: "content" # directory for parsable content
-static_dir: "static" # directory for static (non parsable) content
-default_template: "post"
-themes_dir: "themes"
+content:
+    contentDir: "content" # directory for parsable content
+    staticDir: "static" # directory for static (non parsable) content
+    defaultTemplate: "post"
+    themesDir: "themes"
 
 # Build configuration
-content_parsers: {
-    md: "ErusevParsedown",
-    markdown: "ErusevParsedown"
-}
-
-output_dir: "dist" # destination dir to files
+output:
+    parsers: {
+        md: "ErusevParsedown",
+        markdown: "ErusevParsedown"
+    }
+    target: "dist" # destination dir to files
 
 # Plugins
 #plugin_dir: "plugin"

@@ -49,7 +49,7 @@ class TagsPlugin implements PluginInterface
     
     protected function injectTagList(BuildDataIterator $pageIterator)
     {
-        $file = $pageIterator->getConfig()->getAllConfig()['content_dir'].'/tags.md';
+        $file = $pageIterator->getConfig()->getAllConfig()['content']['contentDir'].'/tags.md';
         
         $frontMatter = [
             'title' => 'Tags',

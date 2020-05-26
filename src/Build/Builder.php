@@ -31,7 +31,7 @@ class Builder
 
         $this->pageIterator = new BuildDataIterator($this->config);
 
-        $contentDir = $this->loadContentDir($this->config->getAllConfig()['content_dir']);
+        $contentDir = $this->loadContentDir($this->config->getAllConfig()['content']['contentDir']);
 
         foreach ($contentDir as $contentFile) {
             $logger->debug("Processs $contentFile");
@@ -69,16 +69,7 @@ class Builder
     protected function loadContentDir(string $contentPath): array
     {
         $content = [];
-//        $dirContent = new DirectoryIterator($contentPath);
-//
-//        $this->logger->debug("Load content dir $contentPath");
-//        foreach ($dirContent as $currentContent) {
-//            if ($currentContent->isFile()) {
-//                $content[] = $currentContent->getPathname();
-//                $this->logger->debug("Load content from {$currentContent->getPathname()}");
-//            }
-//        }
-        
+
         $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($contentPath));
         $it->rewind();
         while ($it->valid()){
@@ -141,7 +132,7 @@ class Builder
         $this->logger->debug("Parsing content");
         //faz um loop nas páginas e pega PageData::$content, trasnforma com a classe config.content_parser e salva em PageData::$htmlContent
 
-        $parsersConfigList = $this->config->getAllConfig()['content_parsers'];
+        $parsersConfigList = $this->config->getAllConfig()['output']['parsers'];
 //        print_r($parsersConfigList);
 
         $this->pageIterator->rewind();
@@ -166,7 +157,7 @@ class Builder
         $this->logger->debug("Merging content and templates");
         //loop nas páginas para pegar o frontmatter e o html content e mesclar no template e salvar no PageData::$output
 
-        $theme_path = "{$this->config->getAllConfig()['themes_dir']}/{$this->config->getAllConfig()['theme']}";
+        $theme_path = "{$this->config->getAllConfig()['content']['themesDir']}/{$this->config->getAllConfig()['theme']}";
         $twigLoader = new \Twig\Loader\FilesystemLoader($theme_path);
         $twig = new \Twig\Environment($twigLoader, [
             'autoescape' => false //needs to no auto escape content
@@ -183,7 +174,7 @@ class Builder
             if (key_exists('template', $frontMatter)) {
                 $template = $frontMatter['template'];
             } else {
-                $template = $this->config->getAllConfig()['default_template'];
+                $template = $this->config->getAllConfig()['content']['defaultTemplate'];
             }
 
 //            echo $htmlContent, PHP_EOL;
@@ -199,49 +190,6 @@ class Builder
         }
     }
 
-//    protected function saveOutput()
-//    {
-//        $this->logger->debug("Save output");
-//        //salva os arquivos finais
-////        print_r($this->pageIterator);
-//        $config = $this->config->getAllConfig();
-//
-//        if (!key_exists('output_dir', $config)) {
-//            throw new CriticalException("Output dir not configured!");
-//        }
-//
-//        $output_dir = $config['output_dir'];
-////        echo $output_dir, PHP_EOL;
-//
-//        if (is_dir(realpath($output_dir))) {
-//            $this->delTree(realpath($output_dir));
-//        }
-//
-//        $this->pageIterator->rewind();
-//        while ($this->pageIterator->valid()) {
-//            $page = $this->pageIterator->current();
-//
-//            $frontMatter = $page->getFrontmatter();
-//            $html = $page->getOutput();
-//            $slug = $page->getSlug();
-////            echo $page->getFilePath(), ' -> ',$slug, PHP_EOL;
-////            print_r($frontMatter);
-//
-//
-//            $file_sub_path = str_replace($config['url_base'], $output_dir, $slug);
-//
-//            if (!is_dir($file_sub_path)) {
-//                mkdir($file_sub_path, 0777, true);
-//            }
-//
-//            $file_output = $file_sub_path . "index.html";
-////            echo $slug, ' -> ',$file_output, PHP_EOL;
-////            echo $html, PHP_EOL;
-//            file_put_contents($file_output, $html);
-//
-//            $this->pageIterator->next();
-//        }
-//    }
     protected function saveOutput()
     {
         $this->logger->debug("Save output");
@@ -249,11 +197,11 @@ class Builder
 //        print_r($this->pageIterator);
         $config = $this->config->getAllConfig();
 
-        if (!key_exists('output_dir', $config)) {
+        if (!key_exists('target', $config['output'])) {
             throw new CriticalException("Output dir not configured!");
         }
 
-        $output_dir = $config['output_dir'];
+        $output_dir = $config['output']['target'];
 //        echo $output_dir, PHP_EOL;
 
         if (is_dir(realpath($output_dir))) {
@@ -273,13 +221,15 @@ class Builder
 
             $ext = pathinfo($slug, PATHINFO_EXTENSION);
             $filename = basename($slug, ".$ext").'.html';
-            $file_sub_path = dirname(str_replace($config['url_base'], $output_dir, $slug));
+//            print_r($config);
+            $file_sub_path = dirname(str_replace($config['site']['urlBase'], $output_dir, $slug));
+//            echo $file_sub_path, PHP_EOL;
 
             if (!is_dir($file_sub_path)) {
                 mkdir($file_sub_path, 0777, true);
             }
 
-            $file_output = $file_sub_path . "/". $filename;
+            $file_output = $file_sub_path . DIRECTORY_SEPARATOR . $filename;
 //            echo $slug, ' -> ',$file_output, PHP_EOL;
 //            echo $html, PHP_EOL;
             file_put_contents($file_output, $html);
@@ -293,7 +243,7 @@ class Builder
         $this->logger->debug("Copy static content");
         //copia o conteúdo estático
 
-        $this->recursiveCopy(realpath($this->config->getAllConfig()['static_dir']), realpath($this->config->getAllConfig()['output_dir']));
+        $this->recursiveCopy(realpath($this->config->getAllConfig()['content']['staticDir']), realpath($this->config->getAllConfig()['output']['target']));
     }
 
     protected function copyThemeStatic()
@@ -301,8 +251,8 @@ class Builder
         $this->logger->debug("Copy theme static content");
         //copia o conteúdo estático do tema
         $config = $this->config->getAllConfig();
-        $theme_static_dir = realpath("{$config['themes_dir']}/{$config['theme']}/static/");
-        $output_dir = realpath($this->config->getAllConfig()['output_dir']);
+        $theme_static_dir = realpath("{$config['content']['themesDir']}/{$config['theme']}/static/");
+        $output_dir = realpath($this->config->getAllConfig()['output']['target']);
 
         $this->recursiveCopy("$theme_static_dir", $output_dir);
     }

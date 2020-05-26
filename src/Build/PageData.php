@@ -72,8 +72,8 @@ class PageData
     
     public function getSlug(): string
     {
-        if(key_exists('url_base', $this->config->getAllConfig())) {
-            $url_base = $this->config->getAllConfig()['url_base'];
+        if(key_exists('urlBase', $this->config->getAllConfig()['site'])) {
+            $url_base = $this->config->getAllConfig()['site']['urlBase'];
         } else {
             $url_base = '';
         }
@@ -85,11 +85,7 @@ class PageData
             array_pop($pathSplitted);//pop last element (extension);
             
             
-            $slug = str_replace($this->config->getAllConfig()['content_dir'], '', $pathSplitted)[0];
-        }
-        
-        if(substr($slug, -1, 1) !== '/'){
-            $slug .= '/';
+            $slug = str_replace($this->config->getAllConfig()['content']['contentDir'], '', $pathSplitted)[0];
         }
         
         return "$url_base$slug";
