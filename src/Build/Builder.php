@@ -16,6 +16,7 @@ class Builder
     protected $config = null;
     protected $pageIterator = null;
     protected $logger = null;
+    protected $allPageData = [];
 
     public function __construct(ConfigInterface $config)
     {
@@ -35,9 +36,16 @@ class Builder
 
         foreach ($contentDir as $contentFile) {
             $logger->debug("Processs $contentFile");
+
+            $frontMatter = $this->parseFrontmatter($contentFile);
+
+            if (!key_exists('template', $frontMatter)) {
+                $frontMatter['template'] = $this->config->getAllConfig()['content']['defaultTemplate'];
+            }
+
             $pageData = new PageData(
                 $contentFile,
-                $this->parseFrontmatter($contentFile),
+                $frontMatter,
                 $this->readContent($contentFile),
                 $this->config
             );
@@ -45,9 +53,12 @@ class Builder
             $this->pageIterator->addPageData($pageData);
         }
 
+
         $this->runPlugins();
 
         $this->parseContent();
+
+        $this->allPageData = $this->getAllPageData();
 
         $this->mergeTemplate();
 
@@ -72,13 +83,13 @@ class Builder
 
         $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($contentPath));
         $it->rewind();
-        while ($it->valid()){
-            if($it->isFile()){
+        while ($it->valid()) {
+            if ($it->isFile()) {
                 $content[] = $it->getPathname();
                 $this->logger->debug("Load content from {$it->getPathname()}");
             }
-            
-            
+
+
             $it->next();
         }
 
@@ -176,19 +187,63 @@ class Builder
             } else {
                 $template = $this->config->getAllConfig()['content']['defaultTemplate'];
             }
-
 //            echo $htmlContent, PHP_EOL;
             $output = $twig->render("$template.twig", [
                 'config' => $this->config->getAllConfig(),
                 'page' => [
                     'content' => $htmlContent,
-                    'config' => $frontMatter
-                ]
+                    'config' => $frontMatter,
+                ],
+                'pages' => $this->allPageData
             ]);
 //            echo $output, PHP_EOL;
             $page->setOutput($output);
             $this->pageIterator->next();
         }
+    }
+
+    protected function getAllPageData(): array
+    {
+        $pages = $this->pageIterator;
+        $data = [];
+        $pages->rewind();
+
+        while ($pages->valid()) {
+            $current = $pages->current();
+            if (file_exists($current->getFilePath())) {
+                $frontmatter = $current->getFrontmatter();
+
+                if (!key_exists('date', $frontmatter)) {
+                    $frontmatter['date'] = date('Y-m-d', filemtime($current->getFilePath()));
+                }
+
+                if (!key_exists('modified', $frontmatter)) {
+                    $frontmatter['modified'] = date('Y-m-d', filemtime($current->getFilePath()));
+                }
+                
+                preg_match('/*<p>*<\/p>*/i', trim($current->getHtmlContent()), $matches);
+                print_r(trim($current->getHtmlContent()));
+                print_r($matches);
+                if (!key_exists('description', $frontmatter)) {
+                    $frontmatter['description'] = $matches[0];
+                }
+                if (!key_exists('summary', $frontmatter)) {
+                    $frontmatter['summary'] = $matches[0];
+                }
+
+
+                $data[$current->getFilePath()] = [
+                    'slug' => $current->getSlug(),
+                    'config' => $frontmatter,
+                    'time' => filemtime($current->getFilePath()), //timestamp da última alteração no arquivo para mostrar por ordem de alteração
+                    'htmlContent' => $current->getHtmlContent(),
+                    'content' => $current->getContent(),
+                ];
+            }
+            $pages->next();
+        }
+
+        return $data;
     }
 
     protected function saveOutput()
@@ -221,7 +276,7 @@ class Builder
 
 
             $ext = pathinfo($slug, PATHINFO_EXTENSION);
-            $filename = basename($slug, ".$ext").'.html';
+            $filename = basename($slug, ".$ext") . '.html';
 //            print_r($config);
             $file_sub_path = dirname(str_replace($config['site']['urlBase'], $output_dir, $slug));
 //            echo $file_sub_path, PHP_EOL;
