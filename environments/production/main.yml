@@ -1,0 +1,4 @@
+# configurações para o ambiente de produção
+---
+site:
+    url: "https://everton3x.github.com/meduza/"

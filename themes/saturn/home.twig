@@ -6,7 +6,7 @@
         <div class="container">
             <div class="units-row">
                 <div class="unit-10">
-                    <img class="img-intro" src="{{ config.site.urlBase }}/img/avatar.png" alt="">
+                    <img class="img-intro" src="{{ config.site.url }}/img/avatar.png" alt="">
                 </div>
                 <div class="unit-90">
                     <p class="p-intro">{{ config.site.description }}</p>
@@ -17,7 +17,11 @@
 
     <!-- Content -->
     <div class="content">
-        <div class="container">
+        
+        {% for link in plugin.index-by-date %}
+            <p>{{ link }}</p>
+        {% endfor %}
+        {#<div class="container">
             {% for post in pages %}
             <!-- Post -->
             <div class="post">
@@ -28,7 +32,7 @@
                     <p>
                         {{ post.summary }}
                     </p>
-                    <a class="read-more" href="{{ config.site.urlBase }}/{{ post.slug }}">Read more</a>
+                    <a class="read-more" href="{{ config.site.url }}/{{ post.slug }}">Read more</a>
                 </div>
                 <div class="foot-post">
                     <div class="units-row">
@@ -42,12 +46,12 @@
                             <strong>COMMENTS:</strong> 
                             <a href="#">3</a>
                         </div>#}
-                    </div>
+                    {#</div>
                 </div>
             </div>
             <!-- /post -->
             {% endfor %}
-        </div>
+        </div>#}
     </div>
 {% endblock %}
 

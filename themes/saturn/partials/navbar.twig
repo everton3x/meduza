@@ -3,7 +3,7 @@
     <div class="container">
         <header class="group top-nav">
             <nav class="navbar logo-w navbar-left" >
-                <a class="logo" href="{{ config.site.urlBase }}">{{ config.site.name }}</a>
+                <a class="logo" href="{{ config.site.url }}">{{ config.site.name }}</a>
             </nav>
             <div class="navigation-toggle" data-tools="navigation-toggle" data-target="#navbar-1">
                 <span class="logo">Saturn</span>
@@ -11,11 +11,11 @@
             <nav id="navbar-1" class="navbar item-nav navbar-right">
                 <ul>
                     <li>
-                        <a href="{{ config.site.urlBase }}">Home</a>
+                        <a href="{{ config.site.url }}/">Home</a>
                     </li>
                     {% if config.navbar is defined %}
                         {% for key, url in config.navbar %}
-                        <li><a href="{{ config.site.urlBase }}/{{ url }}">{{ key }}</a></li>
+                        <li><a href="{{ config.site.url }}/{{ url }}">{{ key }}</a></li>
                         {% endfor %}
                     {% endif %}
                 </ul>

@@ -1,45 +1,83 @@
-## Meduza config file.
+# Arquivo de configuração principal
+# O nome e o caminho do arquivo podem ser modificados, entretanto, é 
+# interessante que ele fique no diretório raíz do projeto, pois evita problemas
 ---
-# Site configuration
+# Configuração do site
 site:
-    title: "Meduza Static Site Generator" # site title
+    title: "Meduza Static Site Generator"
     description: "Site de exemplo com Meduza."
-    urlBase: "http://localhost:8000" # url base for site
+    #url: "http://localhost:8000"
+    # url base do site. Útil quando o site ficar em um subdiretório do site, 
+    # como em user.github.io/mysite
+    # defina a url local nas configurações de desenvolvimento
+    # defina a url de produção nas configurações de produção
     author: "Everton da Rosa"
+    # nome curto do site. Útil para usar no lugar do logotipo.
     name: "Meduza"
 
-# Content configuration
+# configuração sobre o conteúdo
 content:
-    contentDir: "content" # directory for parsable content
-    staticDir: "static" # directory for static (non parsable) content
-    defaultTemplate: "post"
-    themesDir: "themes"
+    # diretório onde fica o conteúdo do site que será convertido em html
+    # o conteúdo pode ser markdown, restructured text ou outro, de acordo com
+    # os parser configurados
+    # a estrutura interna desta opção será preservada.
+    source: "content"
+    # conteúdo estático, como imagens, css, js, etc. Não é parseado, porém 
+    # copiado para o diretório de geração.
+    static: "static"
+    
+# Valores padrão para diversas configurações.
+defaults:
+    # o template padrão quando nada for especificado no front matter
+    template: "post"
 
-# Build configuration
+# configurações de construção
 output:
+    # lista de parsers habilitados
+    # a key é a extensão de arquivo e o valor é o nome da classe que implementa 
+    # Meduza\Parser\ParserInterface
     parsers: {
         md: "ErusevParsedown",
         markdown: "ErusevParsedown"
     }
+    # diretório onde serão salvos os arquivos convertidos e o conteúdo estático.
     target: "dist" # destination dir to files
+    
+# configurações sobre o tema a ser utilziado
+theme:
+    # diretório onde estão os temas disponíveis
+    dir: "themes"
 
-# Plugins
-#plugin_dir: "plugin"
-plugins: ["Tags"]
+# Configurações de plugins
+plugins:
+    # diretório onde estão os plugins
+    dir: "plugins"
+    # lista de plugins. Usar o nomedas classes que implementam 
+    # Meduza\Plugin\PluginInterface, porém sem o sufixo Plugin
+    active: ["IndexByData"]
 
-# Extra configuration files
+# Arquivos de ocnfiguração que são carregados junto com este.
+# bom para manter configurações dos temas, só que habilitando um por vez.
 extra-config: [
-    "./extra-config/theme/saturn.yml"
+    "extra-config/theme/saturn.yml",
+    "extra-config/plugin/indexbydate.yml"
 ]
 
+# Configurações de mídas sociais
 social:
     github: "https://github.com/everton3x/"
-    envelope: "mailto:everton3x@gmail.com"
+    email: "mailto:everton3x@gmail.com"
     facebook: "https://facebook.com/everton3x/"
     linkedin: "https://www.linkedin.com/in/everton-da-rosa/"
-    
+
+# Itens a serem mostrados na navbar principal
 navbar:
     About: "pages/about.html"
     "See on Github": "https://github.com/everton3x/meduza"
-    
-disqus: "contabilidadepublica"
+
+# Configurações de diferentes environments
+# Environments (env) são configurações especiais para diferentes ambientes.
+# development e production são obrigatórias
+environment:
+    development: "environments/development/main.yml"
+    production: "environments/production/main.yml"

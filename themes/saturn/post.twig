@@ -6,7 +6,7 @@
         <div class="container">
             <div class="units-row">
                 <div class="unit-10">
-                    <img class="img-intro" src="{{ config.site.urlBase }}/{{ config.avatar }}" alt="">
+                    <img class="img-intro" src="{{ config.site.url }}/{{ config.avatar }}" alt="">
                 </div>
                 <div class="unit-90">
                     <p class="p-intro">{{ page.config.title }}</p>
@@ -34,7 +34,7 @@
                             <div class="unit-100">
                                 <strong>Tags:</strong>
                                 {% for tag in page.config.tags %}
-                                    <a class="badge" href="{{ config.site.urlBase }}/tags/{{ tag }}.html">{{ tag }}</a>
+                                    <a class="badge" href="{{ config.site.url }}/tags/{{ tag }}.html">{{ tag }}</a>
                                 {% endfor %}
                             </div>
                         {% endif %}
