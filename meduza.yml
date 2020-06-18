@@ -41,7 +41,7 @@ output:
         markdown: "ErusevParsedown"
     }
     # diretório onde serão salvos os arquivos convertidos e o conteúdo estático.
-    target: "dist" # destination dir to files
+    target: "dist"
     
 # configurações sobre o tema a ser utilziado
 theme:
@@ -50,7 +50,7 @@ theme:
 
 # Configurações de plugins
 plugins:
-    # diretório onde estão os plugins
+    # diretório onde estão os plugins. tenha em mente que se alterar isso, precisa alterar o composer.json
     dir: "plugins"
     # lista de plugins. Usar o nomedas classes que implementam 
     # Meduza\Plugin\PluginInterface, porém sem o sufixo Plugin

@@ -2,42 +2,45 @@
 
 namespace Meduza\Process;
 
+use Exception;
+
+use function end_slash;
+
 /**
  * Processa os plugins
  *
  * @author Everton
  */
-class LoadPlugins
+class LoadPlugins implements ProcessInterface
 {
-    protected \Meduza\Build\BuildRepo $buildRepo;
-    
-    protected \LogMan\Messenger\MessengerInterface $logger;
 
-
-    public function __construct(\Meduza\Build\BuildRepo $buildRepo, \LogMan\Messenger\MessengerInterface $logger)
+    public function __construct()
     {
-        $this->buildRepo = $buildRepo;
-        $this->logger = $logger;
     }
-    
-    public function run(): \Meduza\Build\BuildRepo
+
+    public function run(array $buildData): array
     {
-        $plugDir = (new \PTK\FileSystem\Directory((new \PTK\FileSystem\Path($this->buildRepo->get('config.plugins.dir')))->slashes()->endSlash()))->realpath();
-//        echo $plugDir, PHP_EOL;exit();
-        $plugList = $this->buildRepo->get('config.plugins.active');
-//        print_r($plugList);exit();
-        
-        foreach ($plugList as $plug) {
-            $plugFile = "{$plugDir}{$plug}Plugin.php";
-            $plugClass = "{$plug}Plugin";
-            
-            require $plugFile;
-            
-            $plugInstance = new $plugClass($this->buildRepo);
-            
-            $this->buildRepo = $plugInstance->run();
+        $plugDir = realpath($buildData['config']['plugins']['dir']);
+        if ($plugDir === false) {
+            throw new Exception("Falha ao pegar o caminho dos plugins em {$buildData['config']['plugins']['dir']}.");
         }
-        
-        return $this->buildRepo;
+        $plugDir = end_slash($plugDir);
+//        echo $plugDir,PHP_EOL;exit;
+        $plugList = $buildData['config']['plugins']['active'];
+//        print_r($plugList);exit;
+        foreach ($plugList as $plug) {
+//            $plugFile = "{$plugDir}{$plug}Plugin.php";
+//            echo $plugFile, PHP_EOL;
+            $plugClass = "\\Meduza\\Plugin\\{$plug}Plugin";
+//            echo "$plugClass", PHP_EOL;exit;
+
+//            require $plugFile;
+
+            $plugInstance = new $plugClass();
+
+            $buildData = $plugInstance->run($buildData);
+        }
+
+        return $buildData;
     }
 }
