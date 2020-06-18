@@ -2,6 +2,12 @@
 
 namespace Meduza\Process;
 
+use Exception;
+
+use function end_slash;
+use function read_files_from_directory;
+use function slash;
+
 /**
  * Prepara meta-páginas.
  *
@@ -29,10 +35,13 @@ class PrepareMetaPages implements ProcessInterface
     public function run(array $buildData): array
     {
         $contentDir = realpath($buildData['config']['content']['source']);
+        if ($contentDir === false) {
+            throw new Exception("Falha ao processar o caminho para {$buildData['config']['content']['source']}");
+        }
         slash($contentDir);
-        endSlash($contentDir);
+        end_slash($contentDir);
 //        echo $contentDir, PHP_EOL;exit();
-        $contentFiles = readFilesIntoDIr($contentDir);
+        $contentFiles = read_files_from_directory($contentDir);
 
         foreach ($contentFiles as $key => $file) {
             $buildData['metaPages'][$key]['fileSource'] = $file;

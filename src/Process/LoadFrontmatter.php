@@ -4,7 +4,7 @@ namespace Meduza\Process;
 
 use Exception;
 
-use function endSlash;
+use function end_slash;
 use function slash;
 
 /**
@@ -28,40 +28,18 @@ class LoadFrontmatter implements ProcessInterface
     {
         $metaPages = &$buildData['metaPages'];
         $contentDir = realpath($buildData['config']['content']['source']);
-        slash($contentDir);
-        endSlash($contentDir);
+        if ($contentDir === false) {
+            throw new Exception("Falha ao processar o caminho para {$buildData['config']['content']['source']}");
+        }
+        $contentDir = slash($contentDir);
+        $contentDir = end_slash($contentDir);
 
         foreach ($metaPages as $key => $page) {
             $file = $page['fileSource'];
             $metaPages[$key]['frontmatter'] = $this->loadFrontmatter($file);
 
-            if (!isset($metaPages[$key]['frontmatter']['slug'])) {
-                $metaPages[$key]['frontmatter']['slug'] = $this->getSlug(
-                    $contentDir,
-                    $page['fileSource'],
-                    $page['fileSourceExtension'],
-                );
-            }
-
-            $this->prependSiteUrl($metaPages[$key]['frontmatter']['slug'], $buildData['config']['site']['url']);
         }
         return $buildData;
-    }
-
-    /**
-     * Adiciona a url do site antes do slug.
-     *
-     * @param string $slug
-     * @param string $siteUrl
-     * @return string
-     */
-    protected function prependSiteUrl(string &$slug, string $siteUrl): string
-    {
-        if (substr($siteUrl, -1, 1) !== '/') {
-            $siteUrl .= '/';
-        }
-
-        return $slug = $siteUrl . $slug;
     }
 
     /**
@@ -72,30 +50,5 @@ class LoadFrontmatter implements ProcessInterface
     protected function loadFrontmatter(string $file): array
     {
         return yaml_parse_file($file, 0);
-    }
-
-    /**
-     * Cria um slug.
-     *
-     * @param string $contentDir
-     * @param string $file
-     * @param string $extension
-     * @return string
-     */
-    protected function getSlug(string $contentDir, string $file, string $extension): string
-    {
-        $slug = preg_replace([
-            "#^$contentDir#",
-            "#$extension$#"
-            ], [
-            '',
-            'html'
-            ], $file);
-
-        if (is_null($slug)) {
-            throw new Exception("Falha ao gerar slug para $file");
-        }
-
-        return $slug;
     }
 }

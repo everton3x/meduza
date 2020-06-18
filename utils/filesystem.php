@@ -37,7 +37,7 @@
  * @return array<string>
  * @throws Exception
  */
-function readFilesIntoDIr(string $dir): array
+function read_files_from_directory(string $dir): array
 {
     $list = [];
     try {
@@ -63,18 +63,26 @@ function readFilesIntoDIr(string $dir): array
 /**
  * Padroniza todas os separadores de diretórios para o separador expresso em
  * DIRECTORY_SEPARATOR do PHP.
- * @param string $path Caminho para padronizar, passado por referência.
- * @return void
+ * @param string $path Caminho para padronizar.
+ * @return string
  */
-function slash(string &$path): void
+function slash(string $path): string
 {
     $path = str_replace('\\', DIRECTORY_SEPARATOR, $path);
     $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
+    return $path;
 }
 
-function endSlash(string &$path): void
+/**
+ * Adiciona DIRECTORY_SEPARATOR ao final de um caminho de diretório.
+ * @param string $path
+ * @return string
+ */
+function end_slash(string $path): string
 {
     if (substr($path, -1, 1) !== '\\' && substr($path, -1, 1) !== '/') {
         $path .= DIRECTORY_SEPARATOR;
     }
+    
+    return $path;
 }

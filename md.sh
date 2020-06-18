@@ -2,4 +2,4 @@
 
 clear
 
-./vendor/bin/phpmd src ansi cleancode,codesize,controversial,design,naming,unusedcode
+./vendor/bin/phpmd src,bootstrap.php,build.php ansi cleancode,codesize,controversial,design,naming,unusedcode
