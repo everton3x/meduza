@@ -47,6 +47,9 @@ $builder->registerProcess(new Meduza\Process\PrepareMetaPages())
     ->registerProcess(new Meduza\Process\LoadPlugins())
     ->registerProcess(new Meduza\Process\ParseToHTML())
     ->registerProcess(new Meduza\Process\MergeTemplate())
+    ->registerProcess(new Meduza\Process\PrepareTarget())
+//    ->registerProcess(new Meduza\Process\CopyThemeStaticContent())
+//    ->registerProcess(new Meduza\Process\CopySiteStaticContent())
 ;
 
 $builder->build();

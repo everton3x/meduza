@@ -83,6 +83,51 @@ function end_slash(string $path): string
     if (substr($path, -1, 1) !== '\\' && substr($path, -1, 1) !== '/') {
         $path .= DIRECTORY_SEPARATOR;
     }
-    
+
     return $path;
+}
+
+/**
+ * Apaga todo o conteúdo do diretório em $path de forma recursiva.
+ *
+ * @param string $path
+ * @param string $exclude Regex para ignorar na exclusão. Usa preg_match para checagem.
+ * @return void
+ */
+function clear_directory_content(string $path, string $exclude = ''): void
+{
+    if (is_dir($path) === false) {
+        throw new Exception("$path não é um diretório ou não existe.");
+    }
+    $path = end_slash($path);
+    $dir = opendir($path);
+    if ($dir === false) {
+        throw new Exception("Não foi possível abrir $path.");
+    }
+
+    while (false !== ($entry = readdir($dir))) {
+        if ($entry === '.' || $entry === '..') {
+            continue;
+        }
+        $entry = $path . $entry;
+
+        if (preg_match("/$exclude/", $entry) == true) {
+            continue;
+        }
+
+        if (is_dir($entry)) {
+            clear_directory_content($entry, $exclude);
+            if (rmdir($entry) === false) {
+                throw new Exception("Não foi possível excluir $entry");
+            }
+            continue;
+        }
+
+        if (unlink($entry) === false) {
+            throw new Exception("Não foi possível excluir $entry");
+        }
+
+//        echo $entry, PHP_EOL;
+    }
+    closedir($dir);
 }

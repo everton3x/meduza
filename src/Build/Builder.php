@@ -87,6 +87,6 @@ class Builder
         foreach ($this->process as $process) {
             $buildData = $process->run($buildData);
         }
-        print_r($buildData);
+//        print_r($buildData);
     }
 }
