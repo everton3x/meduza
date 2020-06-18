@@ -43,8 +43,9 @@ $builder = new \Meduza\Build\Builder($config);
 
 $builder->registerProcess(new Meduza\Process\PrepareMetaPages())
     ->registerProcess(new Meduza\Process\LoadFrontmatter())
-    ->registerProcess(new Meduza\Process\LoadParsableContent())
+//    ->registerProcess(new Meduza\Process\LoadParsableContent())
     ->registerProcess(new Meduza\Process\SetSlug())
+    ->registerProcess(new Meduza\Process\SetFrontmatterDates())
 //    ->registerProcess(new Meduza\Process\LoadPlugins())
 ;
 

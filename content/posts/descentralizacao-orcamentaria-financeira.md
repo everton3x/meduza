@@ -1,8 +1,7 @@
 ---
 title: "Descentralização Orçamentária e Financeira: um breve resumo."
-date: "2020-04-30"
+published: "2020-04-30"
 summary: "Descentralização orçamentária e financeira não é uma realizada para muitos municípios porém não significa que não deve ser conhecido."
-description: "Um breve resumo sobre descentralização orçamentária e financeira, abrangendo os principais conceitos envolvidos."
 categories:
     - Artigo
     - Resumo

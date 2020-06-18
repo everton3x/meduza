@@ -1,7 +1,6 @@
 ---
 title: "Tópicos de Direito Constitucional"
 summary: "Tópicos de Direito Constitucional para saber no dia a dia."
-description: "Tópicos de Direito Constitucional para saber no dia a dia."
 categories:
     - Resumo
 tags:

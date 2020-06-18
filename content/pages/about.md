@@ -1,7 +1,7 @@
 ---
 title: Sobre
-date: "2020-04-24"
-description: Conheça mais sobre o site Contabildiade Pública.
+published: "2020-04-24"
+summary: Conheça mais sobre o site Contabildiade Pública.
 template: page
 image: "/images/por-do-sol-no-mar.jpg"
 ---

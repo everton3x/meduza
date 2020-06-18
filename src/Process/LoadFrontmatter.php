@@ -37,7 +37,6 @@ class LoadFrontmatter implements ProcessInterface
         foreach ($metaPages as $key => $page) {
             $file = $page['fileSource'];
             $metaPages[$key]['frontmatter'] = $this->loadFrontmatter($file);
-
         }
         return $buildData;
     }
