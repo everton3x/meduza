@@ -47,6 +47,8 @@ output:
 theme:
     # diretório onde estão os temas disponíveis
     dir: "themes"
+    # diretório do tema utilizado
+    name: "saturn"
 
 # Configurações de plugins
 plugins:

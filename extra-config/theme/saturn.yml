@@ -1,5 +1,4 @@
 ## Theme configuration for Meduza.
 ---
 theme:
-    name: "saturn"
     avatar: "images/logo.png"

@@ -47,7 +47,10 @@ class SetSlug implements ProcessInterface
                 );
             }
 
-            $this->prependSiteUrl($metaPages[$key]['frontmatter']['slug'], $buildData['config']['site']['url']);
+            $metaPages[$key]['frontmatter']['slug'] = $this->prependSiteUrl(
+                $metaPages[$key]['frontmatter']['slug'],
+                $buildData['config']['site']['url']
+            );
         }
         return $buildData;
     }
@@ -59,13 +62,13 @@ class SetSlug implements ProcessInterface
      * @param string $siteUrl
      * @return string
      */
-    protected function prependSiteUrl(string &$slug, string $siteUrl): string
+    protected function prependSiteUrl(string $slug, string $siteUrl): string
     {
         if (substr($siteUrl, -1, 1) !== '/') {
             $siteUrl .= '/';
         }
 
-        return $slug = $siteUrl . $slug;
+        return $siteUrl . $slug;
     }
 
     /**

@@ -46,6 +46,7 @@ $builder->registerProcess(new Meduza\Process\PrepareMetaPages())
     ->registerProcess(new Meduza\Process\SetFrontmatterDates())
     ->registerProcess(new Meduza\Process\LoadPlugins())
     ->registerProcess(new Meduza\Process\ParseToHTML())
+    ->registerProcess(new Meduza\Process\MergeTemplate())
 ;
 
 $builder->build();
