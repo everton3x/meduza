@@ -9,7 +9,8 @@
     ],
     "require": {
         "php": ">=7.4.3",
-        "ext-yaml": "*"
+        "ext-yaml": "*",
+        "erusev/parsedown": "^1.7"
     },
     "autoload": {
         "psr-4": {

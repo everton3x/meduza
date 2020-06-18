@@ -1,9 +1,9 @@
-#!/usr/bin/env php
 <?php
+
 /*
  * The MIT License
  *
- * Copyright 2020 everton.
+ * Copyright 2020 evert.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,28 +24,42 @@
  * THE SOFTWARE.
  */
 
-require './bootstrap.php';
+namespace Meduza\Parser;
 
-require 'vendor/autoload.php';
+use Exception;
+use Parsedown;
 
-//escolhe qual ambiente a ser usado
-$env = Meduza\Environment\Environment::DEVELOPMENT;
-//$env = Meduza\Environment::PRODUTION;
-//carrega as configurações
-$configLoader = new Meduza\Config\Loader();
-$config = $configLoader->load('meduza.yml', $env);
-//print_r($config);
-//configurando o builder
+/**
+ * Parser using erusev\Parsedown
+ *
+ * @author evert
+ */
+class ErusevParsedown implements ParserInterface
+{
 
-$builder = new \Meduza\Build\Builder($config);
+    /**
+     *
+     * @var Parsedown Armazena uma instância do Parser
+     */
+    protected Parsedown $parser;
 
-$builder->registerProcess(new Meduza\Process\PrepareMetaPages())
-    ->registerProcess(new Meduza\Process\LoadFrontmatter())
-    ->registerProcess(new Meduza\Process\LoadParsableContent())
-    ->registerProcess(new Meduza\Process\SetSlug())
-    ->registerProcess(new Meduza\Process\SetFrontmatterDates())
-    ->registerProcess(new Meduza\Process\LoadPlugins())
-    ->registerProcess(new Meduza\Process\ParseToHTML())
-;
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->parser = new Parsedown();
+    }
 
-$builder->build();
+    /*
+     *
+     */
+    public function parse(string $content): string
+    {
+        try {
+            return $this->parser->parse($content);
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+}

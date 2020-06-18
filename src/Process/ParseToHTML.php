@@ -1,9 +1,9 @@
-#!/usr/bin/env php
 <?php
+
 /*
  * The MIT License
  *
- * Copyright 2020 everton.
+ * Copyright 2020 evert.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,28 +24,41 @@
  * THE SOFTWARE.
  */
 
-require './bootstrap.php';
+namespace Meduza\Process;
 
-require 'vendor/autoload.php';
+/**
+ * Transforma o conteúdo em html
+ *
+ * @author evert
+ */
+class ParseToHTML implements ProcessInterface
+{
 
-//escolhe qual ambiente a ser usado
-$env = Meduza\Environment\Environment::DEVELOPMENT;
-//$env = Meduza\Environment::PRODUTION;
-//carrega as configurações
-$configLoader = new Meduza\Config\Loader();
-$config = $configLoader->load('meduza.yml', $env);
-//print_r($config);
-//configurando o builder
+    public function __construct()
+    {
+    }
 
-$builder = new \Meduza\Build\Builder($config);
+    public function run($buildData): array
+    {
+        $html = '';
+        $parsers = $buildData['config']['output']['parsers'];
+//        print_r($parsers);
+        $metaPages = &$buildData['metaPages'];
+//        print_r($metaPages);
+        foreach ($metaPages as $key => $page) {
+            $extension = $page['fileSourceExtension'];
+            $parsable = $page['parsableContent'];
+            if (key_exists($extension, $parsers)) {
+                $parserClass = "\\Meduza\\Parser\\{$parsers[$extension]}";
+                $parser = new $parserClass();
+                $html = $parser->parse($parsable);
+            }
+            $metaPages[$key]['htmlContent'] = $html;
+//            print_r($html);
+//            print_r($this->buildRepo->get("meta-pages.{$slug}.html"));
+        }
 
-$builder->registerProcess(new Meduza\Process\PrepareMetaPages())
-    ->registerProcess(new Meduza\Process\LoadFrontmatter())
-    ->registerProcess(new Meduza\Process\LoadParsableContent())
-    ->registerProcess(new Meduza\Process\SetSlug())
-    ->registerProcess(new Meduza\Process\SetFrontmatterDates())
-    ->registerProcess(new Meduza\Process\LoadPlugins())
-    ->registerProcess(new Meduza\Process\ParseToHTML())
-;
 
-$builder->build();
+        return $buildData;
+    }
+}
