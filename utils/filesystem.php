@@ -131,3 +131,50 @@ function clear_directory_content(string $path, string $exclude = ''): void
     }
     closedir($dir);
 }
+
+function copy_recursive(string $source, string $destiny): void
+{
+    if (is_dir($source) === false) {
+        throw new Exception("$source é inválido ou não é um diretório.");
+    }
+    $source = realpath($source);
+    if ($source === false) {
+        throw new Exception("$source é inválido ou não é um diretório.");
+    }
+    $source = end_slash($source);
+    
+    if (is_dir($destiny) === false) {
+        if (mkdir($destiny, 0777, true) === false) {
+            throw new Exception("Falha ao tentar criar $destiny");
+        }
+    }
+    $destiny = realpath($destiny);
+    if ($destiny === false) {
+        throw new Exception("$destiny é inválido ou não é um diretório.");
+    }
+    $destiny = end_slash($destiny);
+    
+    $items = read_files_from_directory($source);
+    
+    foreach ($items as $file) {
+//        echo $source, PHP_EOL;
+        $target = preg_replace("#^$source#", $destiny, $file);
+        if ($target == false) {
+            throw new Exception("$file é inválido.");
+        }
+        
+        $dirname = dirname($target);
+        
+        if (is_dir($dirname) === false) {
+            if (mkdir($dirname, 0777, true) === false) {
+                throw new Exception("Falha ao tentar criar $dirname");
+            }
+        }
+        
+        if (copy($file, $target) === false) {
+            throw new Exception("Falha ao copiar $file para $target");
+        }
+        
+//        echo $file, ' -> ', $target, PHP_EOL;
+    }
+}
