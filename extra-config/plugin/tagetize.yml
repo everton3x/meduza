@@ -1,0 +1,10 @@
+## Theme configuration for Meduza.
+---
+plugins:
+    tagetize:
+            #título para a página de tags
+            #title: "Tags by Tagetize Plugin"
+            #template para a página de tags
+            #template: "tags"
+            #base do slug
+            #slug: "tags"

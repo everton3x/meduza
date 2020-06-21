@@ -2,5 +2,5 @@
 
 clear
 
-./vendor/bin/phpstan analyse --level=8 src utils bootstrap.php build.php
+./vendor/bin/phpstan analyse --level=8 src utils plugins bootstrap.php build.php
 

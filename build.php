@@ -43,6 +43,8 @@ $builder->registerProcess(new Meduza\Process\PrepareMetaPages())
     ->registerProcess(new Meduza\Process\LoadFrontmatter())
     ->registerProcess(new Meduza\Process\LoadParsableContent())
     ->registerProcess(new Meduza\Process\SetSlug())
+        //desativado pois é o autor do conteúdo que deve fazer o controle de dadas
+        //também vai possibilitar implementar a geração de conteúdo apenas para os arquivos que tem published
 //    ->registerProcess(new Meduza\Process\SetFrontmatterDates())
     ->registerProcess(new Meduza\Process\LoadPlugins())
     ->registerProcess(new Meduza\Process\ParseToHTML())

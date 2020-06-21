@@ -9,7 +9,7 @@
                     <img class="img-intro" src="{{ config.site.url }}/{{ config.avatar }}" alt="">
                 </div>
                 <div class="unit-90">
-                    <p class="p-intro">{{ page.config.title }}</p>
+                    <p class="p-intro">{{ meta.title }}</p>
                 </div>
             </div>
         </div>
@@ -20,20 +20,20 @@
         <div class="container">
             <!-- Post -->
             <div class="post">
-                {% if page.config.description is defined %}
+                {% if meta.summary is defined %}
                     <!-- Heading -->
-                    <h1>{{ page.config.description}}</h1>
+                    <h1>{{ meta.summary}}</h1>
                     <hr>
                 {% endif %}
                 <div class="in-content">
-                    {{ page.content }}
+                    {{ content }}
                 </div>
                 <div class="foot-post">
                     <div class="units-row">
-                        {% if page.config.tags is defined %}
+                        {% if meta.tags is defined %}
                             <div class="unit-100">
                                 <strong>Tags:</strong>
-                                {% for tag in page.config.tags %}
+                                {% for tag in meta.tags %}
                                     <a class="badge" href="{{ config.site.url }}/tags/{{ tag }}.html">{{ tag }}</a>
                                 {% endfor %}
                             </div>

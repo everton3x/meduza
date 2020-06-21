@@ -1,6 +1,0 @@
-## Theme configuration for Meduza.
----
-plugins:
-    indexbydate:
-            #array com os basenames para aplicar o índice
-            apply: ["index"]

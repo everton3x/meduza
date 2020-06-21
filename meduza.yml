@@ -56,13 +56,13 @@ plugins:
     dir: "plugins"
     # lista de plugins. Usar o nomedas classes que implementam 
     # Meduza\Plugin\PluginInterface, porém sem o sufixo Plugin
-    active: ["IndexByData"]
+    active: ["Tagetize"]
 
 # Arquivos de ocnfiguração que são carregados junto com este.
 # bom para manter configurações dos temas, só que habilitando um por vez.
 extra-config: [
     "extra-config/theme/saturn.yml",
-    "extra-config/plugin/indexbydate.yml"
+    "extra-config/plugin/tagetize.yml"
 ]
 
 # Configurações de mídas sociais

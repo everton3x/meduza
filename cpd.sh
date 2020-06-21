@@ -2,4 +2,4 @@
 
 clear
 
-./vendor/bin/phpcpd --fuzzy --progress src utils bootstrap.php build.php
+./vendor/bin/phpcpd --fuzzy --progress src utils plugins bootstrap.php build.php
