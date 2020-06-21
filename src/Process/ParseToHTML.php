@@ -38,7 +38,7 @@ class ParseToHTML implements ProcessInterface
     {
     }
 
-    public function run($buildData): array
+    public function run(array $buildData): array
     {
         $html = '';
         $parsers = $buildData['config']['output']['parsers'];

@@ -42,7 +42,7 @@ class CopyThemeStaticContent implements ProcessInterface
     {
     }
 
-    public function run($buildData): array
+    public function run(array $buildData): array
     {
         $themeSaticDir = $this->getThemeStaticDir($buildData['config']);
 //        echo $themeSaticDir, PHP_EOL;

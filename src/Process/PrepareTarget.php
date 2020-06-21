@@ -43,7 +43,7 @@ class PrepareTarget implements ProcessInterface
     {
     }
 
-    public function run($buildData): array
+    public function run(array $buildData): array
     {
         $target = $buildData['config']['output']['target'];
         $targetDir = realpath($target);

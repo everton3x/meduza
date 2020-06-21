@@ -44,7 +44,7 @@ class MergeTemplate implements ProcessInterface
     {
     }
 
-    public function run($buildData): array
+    public function run(array $buildData): array
     {
         $metaPages = &$buildData['metaPages'];
         $config = $buildData['config'];

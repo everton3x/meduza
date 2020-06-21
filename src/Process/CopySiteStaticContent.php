@@ -40,7 +40,7 @@ class CopySiteStaticContent implements ProcessInterface
     {
     }
 
-    public function run($buildData): array
+    public function run(array $buildData): array
     {
         $siteStaticDir = $this->getSiteStaticDir($buildData['config']);
 //        echo $themeSaticDir, PHP_EOL;
