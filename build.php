@@ -49,7 +49,7 @@ $builder->registerProcess(new Meduza\Process\PrepareMetaPages())
     ->registerProcess(new Meduza\Process\MergeTemplate())
     ->registerProcess(new Meduza\Process\PrepareTarget())
     ->registerProcess(new Meduza\Process\CopyThemeStaticContent())
-//    ->registerProcess(new Meduza\Process\CopySiteStaticContent())
+    ->registerProcess(new Meduza\Process\CopySiteStaticContent())
 ;
 
 $builder->build();
